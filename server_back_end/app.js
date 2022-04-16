@@ -3,12 +3,35 @@ const hostname = '127.0.0.1';
 const port = 3001;
 const app = express()
 
-// '127.0.0.1:3001/' any reqeust to this endpoint will get a 'Hello World!' string response
-app.get('/', (req, res) => {
-    res.send('Hello World!')
-  })
+/**
+ * For each incoming request parse the request body to JSON object
+ */
+app.use(express.json());
 
-//Listen method as the name sound listens to the connection requests made to above endpoints 
+
+/** 
+ * For each incoming request allow cross connection (To avoid CORS error)
+ */
+app.use(function (req, res, next) {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Headers", "*");
+  next();
+});
+
+
+/**
+ * Endpoint to receive new user details
+ */
+app.post('/newUserDetails', (req, res) => {
+    console.log(req.body)
+    let pName = req.body.name
+    let pEmailId = req.body.email_id
+    let pProfileUrl = req.body.profile_url
+})
+
+/**
+ * Listen method as the name sound listens to the connection requests made to above endpoints  
+ */
 app.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}/`);
 });
