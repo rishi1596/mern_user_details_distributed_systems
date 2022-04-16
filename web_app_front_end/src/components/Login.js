@@ -3,23 +3,26 @@ import { GoogleLogin } from 'react-google-login';
 import '../ui_components/Login.css';
 import login_image from '../images/login_image.png';
 import { useNavigate } from "react-router-dom";
+import ApiCall from '../Utils/ApiCall';
 
 function Login(){
 
     const navigateObj = useNavigate();
     const [apiCallResponse, setApiCallResponse] = useState("");
     const onSuccess = (res) => {
-        console.log('Login Success: currentUser:', res.profileObj.email);
-        // console.log(res)
-        setApiCallResponse("Login Successful! Redirecting...")
-        
-        navigateObj('/Dashboard',{ state :{ userEmail: res.profileObj.email}, replace: true })
+        //console.log('Login Success: currentUser:', res.profileObj);
 
-        //document.getElementById('divApiResponse').innerHTML =
-        // window.localStorage.setItem('userEmail', res.profileObj.email);
-        // setTimeout(() => {
-           //window.location.href = window.location.protocol + "//" + window.location.host + "/Dashboard"
-        // }, 200);
+        var oUserDetails = {"name":res.profileObj.name, "email_id":res.profileObj.email, "profile_url":res.profileObj.imageUrl}
+        ApiCall(process.env.REACT_APP_API_POST_NEW_USER_DETAILS, process.env.REACT_APP_API_METHOD_TYPE_POST,
+           JSON.stringify(oUserDetails)).then(
+             (response) => {console.log(response)
+                //TOOD Response handling
+                setApiCallResponse("Login Successful! Redirecting...")
+                setTimeout(() => {
+                  navigateObj('/Dashboard',{ state :{ userEmail: res.profileObj.email}, replace: true })
+                }, 200);
+              }
+            )
       };
     
       const onFailure = (res) => {
