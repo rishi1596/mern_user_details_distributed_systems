@@ -15,12 +15,16 @@ function Login(){
         var oUserDetails = {"name":res.profileObj.name, "email_id":res.profileObj.email, "profile_url":res.profileObj.imageUrl}
         ApiCall(process.env.REACT_APP_API_POST_NEW_USER_DETAILS, process.env.REACT_APP_API_METHOD_TYPE_POST,
            JSON.stringify(oUserDetails)).then(
-             (response) => {console.log(response)
-                //TOOD Response handling
-                setApiCallResponse("Login Successful! Redirecting...")
-                setTimeout(() => {
-                  navigateObj('/Dashboard',{ state :{ userEmail: res.profileObj.email}, replace: true })
-                }, 200);
+             (response) => {
+                console.log(response)
+                if(response["status"] === "success") {
+                  setApiCallResponse("Login Successful! Redirecting...")
+                  setTimeout(() => {
+                    navigateObj('/Dashboard',{ state :{ userEmail: res.profileObj.email}, replace: true })
+                  }, 200);
+                } else {
+                  setApiCallResponse(response["msg"])
+                }
               }
             )
       };
