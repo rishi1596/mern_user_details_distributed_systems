@@ -2,6 +2,8 @@ const express = require("express");
 const hostname = '127.0.0.1';
 const port = 3001;
 const app = express()
+const oDatabse = require("./database");
+const UserDetailsController = require ("./controllers/userDetailsController")
 
 /**
  * For each incoming request parse the request body to JSON object
@@ -24,9 +26,7 @@ app.use(function (req, res, next) {
  */
 app.post('/newUserDetails', (req, res) => {
     console.log(req.body)
-    let pName = req.body.name
-    let pEmailId = req.body.email_id
-    let pProfileUrl = req.body.profile_url
+    UserDetailsController.dbInsertOrUpdateDetails(req,res)
 })
 
 /**
@@ -34,4 +34,7 @@ app.post('/newUserDetails', (req, res) => {
  */
 app.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}/`);
+  oDatabse.connectDB()
 });
+
+
